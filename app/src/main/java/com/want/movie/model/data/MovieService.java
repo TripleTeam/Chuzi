@@ -6,14 +6,14 @@ import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
+import retrofit2.http.Query;
 
 public interface MovieService {
-    @GET("smth")
+    @GET("/get")
     Single<List<Movie>> getMovies(
-            int happiness,
-            int bullets,
-            int brightness,
-            int sexuality
+            @Query("happiness") int happiness,
+            @Query("bullets") int bullets,
+            @Query("brightness") int brightness,
+            @Query("sexuality") int sexuality
     );
 }
