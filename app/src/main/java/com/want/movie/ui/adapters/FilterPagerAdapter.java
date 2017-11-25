@@ -3,6 +3,7 @@ package com.want.movie.ui.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.SystemClock;
+import android.support.annotation.DrawableRes;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.want.movie.R;
 
@@ -23,10 +25,47 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     private FilterAdapterCallback callback;
     private int item;
     private final GestureDetector detector;
+    private FilterForPager[] filters;
 
     public FilterPagerAdapter(Context context, FilterAdapterCallback callback) {
+        this.detector = new GestureDetector(context, new MyGestureDetector());
         this.callback = callback;
-        detector = new GestureDetector(context, new MyGestureDetector());
+        filters = new FilterForPager[4];
+
+
+        filters[0] = new FilterForPager(
+                24f,
+                Color.parseColor("#3B2ED2"),
+                Color.parseColor("#3B2ED2"),
+                R.drawable.b0,
+                R.drawable.b1,
+                R.drawable.b2,
+                R.drawable.b3,
+                R.drawable.b4,
+                R.drawable.b5,
+                R.drawable.b6,
+                R.drawable.b7,
+                R.drawable.b8,
+                R.drawable.b9,
+                R.drawable.b10,
+                R.drawable.b11,
+                R.drawable.b12
+        );
+
+        filters[1] = new FilterForPager(
+                50f,
+                Color.parseColor("#FF6B6B"),
+                Color.parseColor("#6B6B6B"),
+                R.drawable.lips1,
+                R.drawable.lips2,
+                R.drawable.lips3,
+                R.drawable.lips4,
+                R.drawable.lips5
+        );
+
+        filters[2] = new FilterForPager(0, Color.RED, Color.GRAY, R.drawable.ic_launcher_foreground);
+
+        filters[3] = new FilterForPager(0, Color.RED, Color.GRAY, R.drawable.ic_launcher_foreground);
     }
 
     @Override
@@ -35,16 +74,13 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
         switch (position) {
             case 0:
-                view.setBackgroundColor(Color.BLACK);
                 break;
             case 1:
-                view.setBackgroundColor(Color.RED);
+                setState(view, filters[position]);
                 break;
             case 2:
-                view.setBackgroundColor(Color.GREEN);
                 break;
             case 3:
-                view.setBackgroundColor(Color.BLUE);
                 break;
         }
 
@@ -53,6 +89,32 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         return view;
     }
 
+    private void setState(View view, FilterForPager filter) {
+        ImageView image = view.findViewById(R.id.filter_image);
+
+        int ceil = (int) Math.floor((filter.state / 101f) * filter.sprites.length);
+        if (ceil < 0) ceil = 0;
+        image.setImageResource(filter.sprites[ceil]);
+        Log.d("FILTER", "state=" + filter.state);
+        Log.d("FILTER", "index=" + ceil);
+
+        int r1 = (filter.fullColor & 0xFF0000) >> 16;
+        int g1 = (filter.fullColor & 0x00FF00) >> 8;
+        int b1 = filter.fullColor & 0x0000FF;
+        int r2 = (filter.noneColor & 0xFF0000) >> 16;
+        int g2 = (filter.noneColor & 0x00FF00) >> 8;
+        int b2 = filter.noneColor & 0x0000FF;
+
+        float t = filter.state / 100;
+        int rgb = Color.rgb(
+                (int) (r1 * t + r2 * (1 - t)),
+                (int) (g1 * t + g2 * (1 - t)),
+                (int) (b1 * t + b2 * (1 - t))
+        );
+        Log.d("FILTER", "color=" + Integer.toHexString(rgb));
+        view.setBackgroundColor(rgb);
+
+    }
 
     @Override
     public int getCount() {
@@ -83,7 +145,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         item = position;
     }
 
-    long clickTime = 0;
+    private long clickTime = 0;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -106,9 +168,9 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             if (t > 1) t = 1;
             else if (t < 0) t = 0;
             float power = 100 * t;
-//            Log.d("onTouch", "item=" + item + " power=" + power);
             callback.changeState(item, power);
-            v.setBackgroundColor(Color.rgb((int) (255 * t + 0 * (1 - t)), (int) (0 * t + 255 * (1 - t)), (int) (0 * t + 0 * (1 - t))));
+            filters[item].state = power;
+            setState(v, filters[item]);
         }
 
 
@@ -119,16 +181,9 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         void changeState(int pos, float value);
     }
 
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
     static class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            Log.d("onScroll", "x=" + distanceX + "y= " + distanceY);
-            Log.d("onScroll", "e1=" + e1.getEventTime() + "e2= " + e2.getEventTime());
-            Log.d("onScroll", "e1=" + e1.getDownTime() + "e2= " + e2.getDownTime());
             return true;
         }
 
@@ -142,5 +197,25 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
             return false;
         }
+    }
+
+    static class FilterForPager {
+        float state;
+
+        int fullColor;
+
+        int noneColor;
+
+        @DrawableRes
+        int[] sprites;
+
+        public FilterForPager(float state, int fullColor, int noneColor, @DrawableRes int... sprites) {
+            this.state = state;
+            this.fullColor = fullColor;
+            this.noneColor = noneColor;
+            this.sprites = sprites;
+        }
+
+
     }
 }
