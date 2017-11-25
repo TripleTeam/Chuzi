@@ -8,12 +8,12 @@ import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 
-public interface ApiService {
+public interface MovieService {
     @GET("smth")
     Single<List<Movie>> getMovies(
-            String happiness,
-            String bullets,
-            String brightness,
-            String sexuality
+            int happiness,
+            int bullets,
+            int brightness,
+            int sexuality
     );
 }
