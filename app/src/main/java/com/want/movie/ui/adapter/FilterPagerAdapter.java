@@ -1,8 +1,11 @@
 package com.want.movie.ui.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,9 +22,11 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
     private FilterAdapterCallback callback;
     private int item;
+    private final GestureDetector detector;
 
-    public FilterPagerAdapter(FilterAdapterCallback callback) {
+    public FilterPagerAdapter(Context context, FilterAdapterCallback callback) {
         this.callback = callback;
+        detector = new GestureDetector(context, new MyGestureDetector());
     }
 
     @Override
@@ -72,24 +77,38 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             childAt.setOnTouchListener(null);
         }
         View v = (View) object;
+
+
         v.setOnTouchListener(this);
         item = position;
     }
+
+    long clickTime = 0;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
         int action = event.getAction();
 
-        if (action == MotionEvent.ACTION_MOVE) {
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                clickTime = SystemClock.uptimeMillis();
+                break;
+            case MotionEvent.ACTION_UP:
+                clickTime = 0;
+                break;
+        }
+
+        if (detector.onTouchEvent(event) && clickTime != 0 && SystemClock.uptimeMillis() - clickTime > 100L) {
             float screenY = event.getY();
             float y = screenY - v.getTop();
             float t = (v.getHeight() - y) / v.getHeight();
             if (t > 1) t = 1;
             else if (t < 0) t = 0;
             float power = 100 * t;
-            Log.d("onTouch", "item=" + item + " power=" + power);
+//            Log.d("onTouch", "item=" + item + " power=" + power);
             callback.changeState(item, power);
+            v.setAlpha(t);
         }
 
 
@@ -98,5 +117,30 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
     public interface FilterAdapterCallback {
         void changeState(int pos, float value);
+    }
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    static class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.d("onScroll", "x=" + distanceX + "y= " + distanceY);
+            Log.d("onScroll", "e1=" + e1.getEventTime() + "e2= " + e2.getEventTime());
+            Log.d("onScroll", "e1=" + e1.getDownTime() + "e2= " + e2.getDownTime());
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+            return false;
+        }
     }
 }

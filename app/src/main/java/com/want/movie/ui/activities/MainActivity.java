@@ -30,8 +30,9 @@ public class MainActivity extends AppCompatActivity implements FilterPagerAdapte
 
     private void initViews() {
         pager = findViewById(R.id.main_pager);
-        adapter = new FilterPagerAdapter(this);
+        adapter = new FilterPagerAdapter(this, this);
         pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(4);
 
         f1 = findViewById(R.id.filter_1);
         f2 = findViewById(R.id.filter_2);
@@ -47,15 +48,12 @@ public class MainActivity extends AppCompatActivity implements FilterPagerAdapte
                 break;
             case 1:
                 f2.setText(String.format(Locale.US, "%.2f", value));
-
                 break;
             case 2:
                 f3.setText(String.format(Locale.US, "%.2f", value));
-
                 break;
             case 3:
                 f4.setText(String.format(Locale.US, "%.2f", value));
-
                 break;
         }
     }
