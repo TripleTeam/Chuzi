@@ -39,4 +39,6 @@ dependencies {
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     testImplementation 'junit:junit:4.12'
+
+    implementation 'me.relex:circleindicator:1.2.2@aar'
 }

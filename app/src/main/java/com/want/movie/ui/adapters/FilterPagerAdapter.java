@@ -108,7 +108,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             float power = 100 * t;
 //            Log.d("onTouch", "item=" + item + " power=" + power);
             callback.changeState(item, power);
-            v.setAlpha(t);
+            v.setBackgroundColor(Color.rgb((int) (255 * t + 0 * (1 - t)), (int) (0 * t + 255 * (1 - t)), (int) (0 * t + 0 * (1 - t))));
         }
 
 

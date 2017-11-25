@@ -1,32 +1,31 @@
 package com.want.movie.ui.activities;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.widget.TextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.want.movie.R;
-import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.model.entities.Filter;
 import com.want.movie.model.entities.Movie;
 import com.want.movie.ui.App;
+import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.ui.adapters.MoviesAdapter;
 import com.want.movie.ui.decorations.HorizontalSpaceDecoration;
 import com.want.movie.ui.util.StartSnapHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import java.util.Locale;
+import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
 
@@ -59,6 +58,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         adapter = new FilterPagerAdapter(this, this);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(4);
+        CircleIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
 
         f1 = findViewById(R.id.filter_1);
         f2 = findViewById(R.id.filter_2);
