@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.want.movie.R;
+import com.want.movie.model.data.ApiMovieRepository;
 import com.want.movie.model.data.MovieRepository;
-import com.want.movie.model.data.MovieRepositoryMock;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -33,6 +33,6 @@ public class App extends Application {
     }
 
     public static MovieRepository getMovieRepository() {
-        return MovieRepositoryMock.INSTANCE;
+        return ApiMovieRepository.INSTANCE;
     }
 }

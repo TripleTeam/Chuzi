@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MovieService {
-    @GET("/get")
+    @GET("get")
     Single<List<Movie>> getMovies(
             @Query("happiness") int happiness,
             @Query("bullets") int bullets,

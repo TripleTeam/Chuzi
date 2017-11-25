@@ -20,7 +20,7 @@
         android:layout_below="@id/movieCover"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="2"
         android:textColor="@color/black"
         android:textSize="14sp"
         tools:text="Name of movieww will be here" />

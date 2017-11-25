@@ -185,7 +185,10 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                 movies.clear();
                 movies.addAll(diffResultListPair.second);
 
-                diffResultListPair.first.dispatchUpdatesTo(movieRecyclerView.getAdapter());
+//                movieRecyclerView.getAdapter().notifyDataSetChanged();
+                diffResultListPair.first.dispatchUpdatesTo(
+                        movieRecyclerView.getAdapter()
+                );
             }
         };
     }
