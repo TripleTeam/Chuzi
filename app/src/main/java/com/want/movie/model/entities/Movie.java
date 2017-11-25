@@ -5,6 +5,12 @@ public class Movie {
     private String cover;
     private String url;
 
+    public Movie(String title, String cover, String url) {
+        this.title = title;
+        this.cover = cover;
+        this.url = url;
+    }
+
     public String getTitle() {
         return title;
     }
