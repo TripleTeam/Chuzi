@@ -55,4 +55,24 @@ public class Movie implements Parcelable {
         dest.writeString(cover);
         dest.writeString(url);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Movie movie = (Movie) o;
+
+        if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
+        if (cover != null ? !cover.equals(movie.cover) : movie.cover != null) return false;
+        return url != null ? url.equals(movie.url) : movie.url == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (cover != null ? cover.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        return result;
+    }
 }
