@@ -63,26 +63,37 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 R.drawable.lips5
         );
 
-        filters[2] = new FilterForPager(0, Color.RED, Color.GRAY, R.drawable.ic_launcher_foreground);
+        filters[2] = new FilterForPager(
+                0,
+                Color.RED,
+                Color.GRAY,
+                R.mipmap.ic_launcher);
 
-        filters[3] = new FilterForPager(0, Color.RED, Color.GRAY, R.drawable.ic_launcher_foreground);
+        filters[3] = new FilterForPager(
+                50,
+                Color.parseColor("#27549C"),
+                Color.parseColor("#27549C"),
+                R.drawable.h13,
+                R.drawable.h12,
+                R.drawable.h11,
+                R.drawable.h10,
+                R.drawable.h9,
+                R.drawable.h8,
+                R.drawable.h7,
+                R.drawable.h6,
+                R.drawable.h5,
+                R.drawable.h4,
+                R.drawable.h3,
+                R.drawable.h2,
+                R.drawable.h1
+        );
     }
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_filter, container, false);
 
-        switch (position) {
-            case 0:
-                break;
-            case 1:
-                setState(view, filters[position]);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
+        setState(view, filters[position]);
 
         view.setTag(position);
         container.addView(view);
@@ -162,14 +173,24 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         }
 
         if (detector.onTouchEvent(event) && clickTime != 0 && SystemClock.uptimeMillis() - clickTime > 100L) {
-            float screenY = event.getY();
-            float y = screenY - v.getTop();
-            float t = (v.getHeight() - y) / v.getHeight();
-            if (t > 1) t = 1;
-            else if (t < 0) t = 0;
-            float power = 100 * t;
-            callback.changeState(item, power);
+            float y = event.getY();
+            float yTop = y - v.getTop();
+            float yBot = y - v.getBottom();
+            if (yTop < 0 || yBot > 0) return true;
+//            float t = (v.getHeight() - y) / v.getHeight();
+//            if (t > 1) t = 1;
+//            else if (t < 0) t = 0;
+
+            float yFirst = event.getHistorySize() < 1 ? event.getY() : event.getHistoricalY(0);
+            float yLast = event.getY();
+            Log.d("ONTOUCH", "f=" + yFirst + " l=" + yLast);
+
+            float power = filters[item].state + (yFirst - yLast) / 10f;
+            if (power >= 100f) power = 100f;
+            if (power <= 0f) power = 0f;
+
             filters[item].state = power;
+            callback.changeState(item, power);
             setState(v, filters[item]);
         }
 
@@ -192,9 +213,23 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             return true;
         }
 
+        private static final int SWIPE_MIN_DISTANCE = 120;
+        private static final int SWIPE_MAX_OFF_PATH = 200;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
+//            try {
+//                // downward swipe
+//                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
+//                    return true;
+//                else if (Math.abs(e2.getY() - e1.getY()) > SWIPE_MAX_OFF_PATH && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
+//                    return true;
+//                    // right to left swipe
+//                else return false;
+//            } catch (Exception e) {
+//                // nothing
+//            }
             return false;
         }
     }
@@ -218,4 +253,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
 
     }
+
+
 }
