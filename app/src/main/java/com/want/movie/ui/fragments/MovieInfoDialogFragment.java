@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +43,10 @@ public class MovieInfoDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setCanceledOnTouchOutside(true);
         return inflater.inflate(R.layout.fragment_movie_detail, container, false);
     }
 
@@ -86,5 +92,17 @@ public class MovieInfoDialogFragment extends DialogFragment {
 
     private void openBrowser(String url) {
         //Do nothing
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        int width = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_width);
+        int height = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_height);
+
+        Window window = getDialog().getWindow();
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
     }
 }

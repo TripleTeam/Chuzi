@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    android:padding="24dp">
 
     <ImageView
         android:id="@+id/movieImage"
@@ -17,7 +17,7 @@
         fontPath="fonts/Futura-Bold.otf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_toEndOf="@id/movieImage"
         android:ellipsize="end"
         android:maxLines="3"
@@ -41,10 +41,12 @@
         android:id="@+id/movieDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/watchNow"
         android:layout_below="@id/movieImage"
         android:layout_marginTop="16dp"
         android:ellipsize="end"
-        android:maxLines="7"
+        android:maxLines="9"
+        android:textColor="@color/black"
         android:text="text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text "
         android:textSize="@dimen/detail_text_size" />
 
@@ -53,7 +55,7 @@
         fontPath="fonts/Futura-Bold.otf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/movieDetails"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="16dp"
         android:background="@drawable/watch_now_background"
         android:gravity="center"
