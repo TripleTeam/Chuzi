@@ -37,6 +37,6 @@ public enum MovieRepositoryMock implements MovieRepository {
     private Movie generateMovie(int position) {
         String cover = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg";
         String url = "http://www.imdb.com/title/tt0468569/";
-        return new Movie("Title " + position + " title of the film will be here", cover, url);
+        return new Movie("Title " + position + " title of the film will be heretitle of the film will be heretitle of the film will be here", cover, url);
     }
 }
