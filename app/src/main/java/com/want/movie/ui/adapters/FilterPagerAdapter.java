@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -106,8 +105,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         int ceil = (int) Math.floor((filter.state / 101f) * filter.sprites.length);
         if (ceil < 0) ceil = 0;
         image.setImageResource(filter.sprites[ceil]);
-        Log.d("FILTER", "state=" + filter.state);
-        Log.d("FILTER", "index=" + ceil);
 
         int r1 = (filter.fullColor & 0xFF0000) >> 16;
         int g1 = (filter.fullColor & 0x00FF00) >> 8;
@@ -122,7 +119,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 (int) (g1 * t + g2 * (1 - t)),
                 (int) (b1 * t + b2 * (1 - t))
         );
-        Log.d("FILTER", "color=" + Integer.toHexString(rgb));
         view.setBackgroundColor(rgb);
 
     }
@@ -183,7 +179,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
             float yFirst = event.getHistorySize() < 1 ? event.getY() : event.getHistoricalY(0);
             float yLast = event.getY();
-            Log.d("ONTOUCH", "f=" + yFirst + " l=" + yLast);
 
             float power = filters[item].state + (yFirst - yLast) / 10f;
             if (power >= 100f) power = 100f;
