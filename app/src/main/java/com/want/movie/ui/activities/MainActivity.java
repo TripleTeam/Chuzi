@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.widget.Toast;
 
 import com.want.movie.R;
@@ -13,6 +14,7 @@ import com.want.movie.model.entities.Movie;
 import com.want.movie.ui.App;
 import com.want.movie.ui.adapters.MoviesAdapter;
 import com.want.movie.ui.decorations.HorizontalSpaceDecoration;
+import com.want.movie.ui.util.StartSnapHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         int spacePx = getResources().getDimensionPixelSize(R.dimen.movie_horizontal_space);
         movieRecyclerView.addItemDecoration(new HorizontalSpaceDecoration(spacePx));
+        SnapHelper snapHelper = new StartSnapHelper();
+        snapHelper.attachToRecyclerView(movieRecyclerView);
     }
 
     // TODO: 25/11/2017 get out from activity
