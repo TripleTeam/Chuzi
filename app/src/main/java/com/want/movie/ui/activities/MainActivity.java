@@ -1,32 +1,39 @@
 package com.want.movie.ui.activities;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.widget.TextView;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Pair;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.want.movie.R;
-import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.model.entities.Filter;
 import com.want.movie.model.entities.Movie;
+import com.want.movie.model.util.OldNewContainer;
 import com.want.movie.ui.App;
+import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.ui.adapters.MoviesAdapter;
 import com.want.movie.ui.decorations.HorizontalSpaceDecoration;
+import com.want.movie.ui.util.GenericDiffUtilCallback;
 import com.want.movie.ui.util.StartSnapHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
 import java.util.Locale;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
 
@@ -38,7 +45,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     private TextView f3;
     private TextView f4;
 
-    RecyclerView movieRecyclerView;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private RecyclerView movieRecyclerView;
 
     private final List<Movie> movies = new ArrayList<>();
     private final Filter filter = new Filter(50, 50, 50, 50);
@@ -97,23 +105,44 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     // TODO: 25/11/2017 get out from activity
     private void fetchData() {
-        App
-                .getMovieRepository()
-                .getMovies(filter)
+        Disposable disposable = oldNewMoviesStream()
+                .map(wrapWithDiffUtil())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onSuccess(), onError());
+        compositeDisposable.add(disposable);
     }
 
     @NonNull
-    private Consumer<List<Movie>> onSuccess() {
-        return new Consumer<List<Movie>>() {
+    private Function<OldNewContainer<Movie>, Pair<DiffUtil.DiffResult, List<Movie>>> wrapWithDiffUtil() {
+        return new Function<OldNewContainer<Movie>, Pair<DiffUtil.DiffResult, List<Movie>>>() {
             @Override
-            public void accept(List<Movie> movieList) throws Exception {
-                // TODO: 25/11/2017 use DiffUtil and notify only changed items. it will be affect on UI
+            public Pair<DiffUtil.DiffResult, List<Movie>> apply(OldNewContainer<Movie> movieOldNewContainer) throws Exception {
+                DiffUtil.Callback callback = new GenericDiffUtilCallback<>(movieOldNewContainer.getOldList(), movieOldNewContainer.getNewList());
+                return new Pair<>(DiffUtil.calculateDiff(callback), movieOldNewContainer.getNewList());
+            }
+        };
+    }
+
+    private Single<OldNewContainer<Movie>> oldNewMoviesStream() {
+        return Single.zip(Single.just(movies), App.getMovieRepository().getMovies(filter), new BiFunction<List<Movie>, List<Movie>, OldNewContainer<Movie>>() {
+            @Override
+            public OldNewContainer<Movie> apply(List<Movie> oldList, List<Movie> newList) throws Exception {
+                return new OldNewContainer<>(oldList, newList);
+            }
+        });
+    }
+
+
+    @NonNull
+    private Consumer<Pair<DiffUtil.DiffResult, List<Movie>>> onSuccess() {
+        return new Consumer<Pair<DiffUtil.DiffResult, List<Movie>>>() {
+            @Override
+            public void accept(Pair<DiffUtil.DiffResult, List<Movie>> diffResultListPair) throws Exception {
                 movies.clear();
-                movies.addAll(movieList);
-                movieRecyclerView.getAdapter().notifyDataSetChanged();
+                movies.addAll(diffResultListPair.second);
+
+                diffResultListPair.first.dispatchUpdatesTo(movieRecyclerView.getAdapter());
             }
         };
     }
@@ -127,5 +156,11 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                 Toast.makeText(MainActivity.this, "No connection", Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
     }
 }
