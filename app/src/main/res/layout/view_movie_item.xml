@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/movieCover"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_movie_poster"
+        tools:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/movieTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/movieCover"
+        android:layout_alignStart="@id/movieCover"
+        android:layout_below="@id/movieCover"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:text="Name of movieww will be here" />
+</RelativeLayout>
