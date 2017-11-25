@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movie</string>
     <string name="content_description_movie_poster">Movie poster</string>
+    <string name="watch_now">Watch now</string>
 </resources>

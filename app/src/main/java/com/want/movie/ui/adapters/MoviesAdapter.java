@@ -1,7 +1,5 @@
 package com.want.movie.ui.adapters;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.want.movie.R;
 import com.want.movie.model.entities.Movie;
-import com.want.movie.ui.App;
+import com.want.movie.model.navigators.MovieNavigator;
 import com.want.movie.ui.listeners.OnItemClickedListener;
 
 import java.util.List;
@@ -23,9 +21,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
 
     private final List<Movie> movieList;
+    private final MovieNavigator movieNavigator;
 
-    public MoviesAdapter(@NonNull List<Movie> movieList) {
+    public MoviesAdapter(@NonNull List<Movie> movieList, MovieNavigator movieNavigator) {
         this.movieList = movieList;
+        this.movieNavigator = movieNavigator;
     }
 
     @Override
@@ -48,13 +48,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public void onItemClicked(int position) {
         Movie movie = movieList.get(position);
-        openMovie(movie);
-    }
-
-    private void openMovie(Movie movie) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(movie.getUrl()));
-        browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        App.getContext().startActivity(browserIntent);
+        movieNavigator.navigateToMovie(movie);
     }
 
     static class MovieViewHolder extends RecyclerView.ViewHolder {

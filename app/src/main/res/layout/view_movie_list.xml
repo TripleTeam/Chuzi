@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
+    android:paddingLeft="@dimen/movie_horizontal_space"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
     android:scrollbarStyle="outsideOverlay" />

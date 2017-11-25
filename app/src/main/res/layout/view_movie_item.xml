@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/movieCover"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/movie_image_width"
         android:layout_height="wrap_content"
         android:contentDescription="@string/content_description_movie_poster"
         tools:src="@drawable/ic_launcher_background" />
@@ -20,8 +20,8 @@
         android:layout_below="@id/movieCover"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="2"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="@dimen/detail_text_size"
         tools:text="Name of movieww will be here" />
 </RelativeLayout>

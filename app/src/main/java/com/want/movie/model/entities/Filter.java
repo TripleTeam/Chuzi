@@ -28,4 +28,30 @@ public class Filter {
     public int getSexuality() {
         return sexuality;
     }
+
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
+
+    public void setBullets(int bullets) {
+        this.bullets = bullets;
+    }
+
+    public void setBrightness(int brightness) {
+        this.brightness = brightness;
+    }
+
+    public void setSexuality(int sexuality) {
+        this.sexuality = sexuality;
+    }
+
+    @Override
+    public String toString() {
+        return "Filter{" +
+                "happiness=" + happiness +
+                ", bullets=" + bullets +
+                ", brightness=" + brightness +
+                ", sexuality=" + sexuality +
+                '}';
+    }
 }
