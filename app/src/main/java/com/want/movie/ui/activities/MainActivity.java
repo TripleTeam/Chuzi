@@ -76,18 +76,19 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     @Override
     public void changeState(int pos, float value) {
+        String text = String.format(Locale.US, "%.2f", value);
         switch (pos) {
             case 0:
-                f1.setText(String.format(Locale.US, "%.2f", value));
+                f1.setText(text);
                 break;
             case 1:
-                f2.setText(String.format(Locale.US, "%.2f", value));
+                f2.setText(text);
                 break;
             case 2:
-                f3.setText(String.format(Locale.US, "%.2f", value));
+                f3.setText(text);
                 break;
             case 3:
-                f4.setText(String.format(Locale.US, "%.2f", value));
+                f4.setText(text);
                 break;
         }
     }
