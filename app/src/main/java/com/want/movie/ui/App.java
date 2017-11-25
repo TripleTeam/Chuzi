@@ -3,8 +3,11 @@ package com.want.movie.ui;
 import android.app.Application;
 import android.content.Context;
 
+import com.want.movie.R;
 import com.want.movie.model.data.MovieRepository;
 import com.want.movie.model.data.MovieRepositoryMock;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
 /**
@@ -18,6 +21,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Futura-Medium.otf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
     }
 
     public static Context getContext() {

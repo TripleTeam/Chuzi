@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements FilterPagerAdapter.FilterAdapterCallback {
+public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
 
 
     private ViewPager pager;
