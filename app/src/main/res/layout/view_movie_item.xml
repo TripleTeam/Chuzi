@@ -18,7 +18,10 @@
         android:layout_alignEnd="@id/movieCover"
         android:layout_alignStart="@id/movieCover"
         android:layout_below="@id/movieCover"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="14sp"
         tools:text="Name of movieww will be here" />
 </RelativeLayout>
