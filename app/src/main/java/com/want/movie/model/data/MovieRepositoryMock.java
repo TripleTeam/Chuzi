@@ -1,5 +1,7 @@
 package com.want.movie.model.data;
 
+import android.util.Log;
+
 import com.want.movie.model.entities.Filter;
 import com.want.movie.model.entities.Movie;
 
@@ -14,6 +16,7 @@ public enum MovieRepositoryMock implements MovieRepository {
 
     @Override
     public Single<List<Movie>> getMovies(Filter filter) {
+        Log.d("MovieRep", "Hit me with filter " + filter.toString());
         return Single.fromCallable(new Callable<List<Movie>>() {
             @Override
             public List<Movie> call() throws Exception {

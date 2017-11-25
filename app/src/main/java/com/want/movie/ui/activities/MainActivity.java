@@ -25,7 +25,9 @@ import com.want.movie.ui.util.StartSnapHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,10 +36,11 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
 
-
+    private static final long FILTER_DEBOUNCE_MILLIS = 300L;
     private ViewPager pager;
     private FilterPagerAdapter adapter;
     private TextView f1;
@@ -48,6 +51,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RecyclerView movieRecyclerView;
 
+    private final PublishSubject<Filter> filterPublishSubject = PublishSubject.create();
     private final List<Movie> movies = new ArrayList<>();
     private final Filter filter = new Filter(50, 50, 50, 50);
 
@@ -59,7 +63,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         initViews();
         initRecyclerView();
 
-        fetchData();
+        subscribeToFilterUpdates();
+        filterPublishSubject.onNext(filter);
     }
 
     private void initViews() {
@@ -77,20 +82,43 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     @Override
     public void changeState(int pos, float value) {
         String text = String.format(Locale.US, "%.2f", value);
+        int intValue = (int) value;
         switch (pos) {
             case 0:
-                f1.setText(text);
+                updateHappiness(text, intValue);
                 break;
             case 1:
-                f2.setText(text);
+                updateBullets(text, intValue);
                 break;
             case 2:
-                f3.setText(text);
+                updateBrightness(text, intValue);
                 break;
             case 3:
-                f4.setText(text);
+                updateSexuality(text, intValue);
                 break;
         }
+
+        filterPublishSubject.onNext(filter);
+    }
+
+    private void updateSexuality(String text, int intValue) {
+        f4.setText(text);
+        filter.setSexuality(intValue);
+    }
+
+    private void updateBrightness(String text, int intValue) {
+        f3.setText(text);
+        filter.setBrightness(intValue);
+    }
+
+    private void updateBullets(String text, int intValue) {
+        f2.setText(text);
+        filter.setBullets(intValue);
+    }
+
+    private void updateHappiness(String text, int intValue) {
+        f1.setText(text);
+        filter.setHappiness(intValue);
     }
 
     private void initRecyclerView() {
@@ -105,14 +133,34 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     }
 
     // TODO: 25/11/2017 get out from activity
-    private void fetchData() {
-        Disposable disposable = oldNewMoviesStream()
+    private void subscribeToFilterUpdates() {
+        Disposable disposable = filterPublishSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .debounce(FILTER_DEBOUNCE_MILLIS, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<Filter, Observable<OldNewContainer<Movie>>>() {
+                             @Override
+                             public Observable<OldNewContainer<Movie>> apply(Filter filter) throws Exception {
+                                 return oldNewMoviesStream(filter);
+                             }
+                         }
+                )
                 .map(wrapWithDiffUtil())
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onSuccess(), onError());
         compositeDisposable.add(disposable);
     }
+
+
+    private Observable<OldNewContainer<Movie>> oldNewMoviesStream(Filter filter) {
+        return Single.zip(Single.just(movies), App.getMovieRepository().getMovies(filter), new BiFunction<List<Movie>, List<Movie>, OldNewContainer<Movie>>() {
+            @Override
+            public OldNewContainer<Movie> apply(List<Movie> oldList, List<Movie> newList) throws Exception {
+                return new OldNewContainer<>(oldList, newList);
+            }
+        }).toObservable();
+    }
+
 
     @NonNull
     private Function<OldNewContainer<Movie>, Pair<DiffUtil.DiffResult, List<Movie>>> wrapWithDiffUtil() {
@@ -123,15 +171,6 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                 return new Pair<>(DiffUtil.calculateDiff(callback), movieOldNewContainer.getNewList());
             }
         };
-    }
-
-    private Single<OldNewContainer<Movie>> oldNewMoviesStream() {
-        return Single.zip(Single.just(movies), App.getMovieRepository().getMovies(filter), new BiFunction<List<Movie>, List<Movie>, OldNewContainer<Movie>>() {
-            @Override
-            public OldNewContainer<Movie> apply(List<Movie> oldList, List<Movie> newList) throws Exception {
-                return new OldNewContainer<>(oldList, newList);
-            }
-        });
     }
 
 
@@ -155,6 +194,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
             public void accept(Throwable throwable) throws Exception {
                 // TODO: 25/11/2017 show some placeholder view for user
                 Toast.makeText(MainActivity.this, "No connection", Toast.LENGTH_SHORT).show();
+                subscribeToFilterUpdates();
             }
         };
     }
