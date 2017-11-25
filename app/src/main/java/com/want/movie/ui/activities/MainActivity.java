@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,7 @@ import android.support.v7.widget.SnapHelper;
 import android.widget.Toast;
 
 import com.want.movie.R;
-import com.want.movie.ui.adapter.FilterPagerAdapter;
+import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.model.entities.Filter;
 import com.want.movie.model.entities.Movie;
 import com.want.movie.ui.App;
@@ -21,10 +20,8 @@ import com.want.movie.ui.decorations.HorizontalSpaceDecoration;
 import com.want.movie.ui.util.StartSnapHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -52,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements FilterPagerAdapte
         setContentView(R.layout.activity_main);
 
         initViews();
+        initRecyclerView();
+
+        fetchData();
     }
 
     private void initViews() {
@@ -82,9 +82,6 @@ public class MainActivity extends AppCompatActivity implements FilterPagerAdapte
                 f4.setText(String.format(Locale.US, "%.2f", value));
                 break;
         }
-        initRecyclerView();
-
-        fetchData();
     }
 
     private void initRecyclerView() {
