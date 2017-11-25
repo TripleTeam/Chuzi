@@ -37,6 +37,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
+import me.relex.circleindicator.CircleIndicator;
 
 public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
 
@@ -72,6 +73,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         adapter = new FilterPagerAdapter(this, this);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(4);
+        CircleIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
 
         f1 = findViewById(R.id.filter_1);
         f2 = findViewById(R.id.filter_2);
