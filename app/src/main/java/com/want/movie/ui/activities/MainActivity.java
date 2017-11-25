@@ -2,6 +2,7 @@ package com.want.movie.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,11 +15,13 @@ import android.widget.Toast;
 import com.want.movie.R;
 import com.want.movie.model.entities.Filter;
 import com.want.movie.model.entities.Movie;
+import com.want.movie.model.navigators.MovieNavigator;
 import com.want.movie.model.util.OldNewContainer;
 import com.want.movie.ui.App;
 import com.want.movie.ui.adapters.FilterPagerAdapter;
 import com.want.movie.ui.adapters.MoviesAdapter;
 import com.want.movie.ui.decorations.HorizontalSpaceDecoration;
+import com.want.movie.ui.fragments.MovieInfoDialogFragment;
 import com.want.movie.ui.util.GenericDiffUtilCallback;
 import com.want.movie.ui.util.StartSnapHelper;
 
@@ -39,8 +42,9 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 import me.relex.circleindicator.CircleIndicator;
 
-public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback {
+public class MainActivity extends ActivityBase implements FilterPagerAdapter.FilterAdapterCallback, MovieNavigator {
 
+    private static final String MOVIE_DETAIL_TAG = "movie_detail_tag";
     private static final long FILTER_DEBOUNCE_MILLIS = 300L;
     private ViewPager pager;
     private FilterPagerAdapter adapter;
@@ -127,7 +131,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     private void initRecyclerView() {
         movieRecyclerView = findViewById(R.id.movieRecyclerView);
         movieRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        movieRecyclerView.setAdapter(new MoviesAdapter(movies));
+        movieRecyclerView.setAdapter(new MoviesAdapter(movies, this));
 
         int spacePx = getResources().getDimensionPixelSize(R.dimen.movie_horizontal_space);
         movieRecyclerView.addItemDecoration(new HorizontalSpaceDecoration(spacePx));
@@ -209,5 +213,13 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void navigateToMovie(Movie movie) {
+        DialogFragment dialogFragment = MovieInfoDialogFragment.newInstance(movie);
+        if (!dialogFragment.isAdded()) {
+            dialogFragment.show(getSupportFragmentManager(), MOVIE_DETAIL_TAG);
+        }
     }
 }
