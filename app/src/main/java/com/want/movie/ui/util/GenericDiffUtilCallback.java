@@ -40,6 +40,7 @@ public class GenericDiffUtilCallback<T> extends DiffUtil.Callback {
     private boolean checkEquals(int oldItemPosition, int newItemPosition) {
         T currentItem = oldList.get(oldItemPosition);
         T nextItem = newList.get(newItemPosition);
-        return currentItem.equals(nextItem);
+        boolean equals = currentItem.equals(nextItem);
+        return equals;
     }
 }
