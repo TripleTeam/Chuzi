@@ -88,6 +88,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     private int sLoad;
     private int sDrop;
+    private int sShot;
     private int sWhistle;
 
     @Override
@@ -101,6 +102,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
             sLoad = pool.load(MainActivity.this, R.raw.clip_load, 1);
             sDrop = pool.load(MainActivity.this, R.raw.bullet_drop, 1);
             sWhistle = pool.load(MainActivity.this, R.raw.whistle, 1);
+            sShot = pool.load(MainActivity.this, R.raw.gun_shot, 1);
         }
     }
 
@@ -145,7 +147,12 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
             @Override
             public void onPageSelected(int position) {
                 pageSelected(position);
-
+                if (position == 1 && selectedPage == 0 && filter.getBullets() == 100) {
+                    if (pool != null) {
+                        pool.play(sShot, 1f, 1f, 1, 0, 1f);
+                    }
+                }
+                selectedPage = position;
             }
 
             @Override
@@ -155,6 +162,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         });
         pageSelected(0);
     }
+
+    int selectedPage = 0;
 
     private void pageSelected(int position) {
         FilterPagerAdapter.FilterForPager[] filters = adapter.filters;
