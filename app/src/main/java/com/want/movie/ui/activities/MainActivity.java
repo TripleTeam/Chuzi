@@ -1,5 +1,6 @@
 package com.want.movie.ui.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -96,45 +97,65 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     }
 
     @Override
-    public void changeState(int pos, float value) {
+    public void changeState(int pos, float value, int color) {
         String text = String.format(Locale.US, "%.2f", value);
         int intValue = (int) value;
         switch (pos) {
             case 0:
-                updateHappiness(text, intValue);
+                updateHappiness(text, intValue, color);
                 break;
             case 1:
-                updateBullets(text, intValue);
+                updateBullets(text, intValue, color);
                 break;
             case 2:
-                updateBrightness(text, intValue);
+                updateBrightness(text, intValue, color);
                 break;
             case 3:
-                updateSexuality(text, intValue);
+                updateSexuality(text, intValue, color);
                 break;
         }
 
         filterPublishSubject.onNext(filter);
     }
 
-    private void updateSexuality(String text, int intValue) {
+    private void updateSexuality(String text, int intValue, int color) {
         f4.setText(text);
         filter.setSexuality(intValue);
+        f4.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f4.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
-    private void updateBrightness(String text, int intValue) {
+    private void updateBrightness(String text, int intValue, int color) {
         f3.setText(text);
         filter.setBrightness(intValue);
+        f3.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f3.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
-    private void updateBullets(String text, int intValue) {
+    private void updateBullets(String text, int intValue, int color) {
         f2.setText(text);
         filter.setBullets(intValue);
+        f2.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
-    private void updateHappiness(String text, int intValue) {
+    private void updateHappiness(String text, int intValue, int color) {
         f1.setText(text);
         filter.setHappiness(intValue);
+        f1.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f1.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
     private void initRecyclerView() {
@@ -202,6 +223,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                 diffResultListPair.first.dispatchUpdatesTo(
                         movieRecyclerView.getAdapter()
                 );
+                movieRecyclerView.scrollToPosition(0);
             }
         };
     }

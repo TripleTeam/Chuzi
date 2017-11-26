@@ -76,11 +76,47 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 50f,
                 Color.parseColor("#80C2FF"),
                 Color.parseColor("#0F1C3F"),
-                R.drawable.lips1,
-                R.drawable.lips2,
-                R.drawable.lips3,
-                R.drawable.lips4,
-                R.drawable.lips5
+                R.drawable.moon1,
+                R.drawable.moon2,
+                R.drawable.moon3,
+                R.drawable.moon4,
+                R.drawable.moon5,
+                R.drawable.moon6,
+                R.drawable.moon7,
+                R.drawable.moon8,
+                R.drawable.moon9,
+                R.drawable.moon10,
+                R.drawable.moon11,
+                R.drawable.moon12,
+                R.drawable.moon13,
+                R.drawable.moon14,
+                R.drawable.moon15,
+                R.drawable.moon16,
+                R.drawable.moon18,
+                R.drawable.moon19,
+                R.drawable.moon20,
+                R.drawable.moon21,
+                R.drawable.sun21,
+                R.drawable.sun20,
+                R.drawable.sun19,
+                R.drawable.sun18,
+                R.drawable.sun17,
+                R.drawable.sun16,
+                R.drawable.sun15,
+                R.drawable.sun14,
+                R.drawable.sun13,
+                R.drawable.sun12,
+                R.drawable.sun11,
+                R.drawable.sun10,
+                R.drawable.sun9,
+                R.drawable.sun8,
+                R.drawable.sun7,
+                R.drawable.sun6,
+                R.drawable.sun5,
+                R.drawable.sun4,
+                R.drawable.sun3,
+                R.drawable.sun2,
+                R.drawable.sun1
         );
 
         filters[3] = new FilterForPager(
@@ -128,7 +164,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
         float state = item == 2 ? Math.abs(filter.state) : filter.state;
 
-        int ceil = (int) Math.floor((state / 101f) * filter.sprites.length);
+        int ceil = (int) Math.floor((item != 2 ? (state / 101f) : (filter.state + 100) / 201f) * filter.sprites.length);
         if (ceil < 0) ceil = 0;
         image.setImageResource(filter.sprites[ceil]);
 
@@ -147,7 +183,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         );
         view.setBackgroundColor(rgb);
 
-        callback.changeState(item, state);
+        callback.changeState(item, state, rgb);
     }
 
     @Override
@@ -205,12 +241,13 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
             Log.d("ONTOUCH", "d=" + metrics.densityDpi / 160f);
 
-
-            float power = filters[item].state + (yFirst - yLast) / (metrics.densityDpi / 40f);
+            float power;
             if (item != 2) {
+                power = filters[item].state + (yFirst - yLast) / (metrics.densityDpi / 60f);
                 if (power >= 100f) power = 100f;
                 if (power <= 0f) power = 0f;
             } else {
+                power = filters[item].state + (yFirst - yLast) / (metrics.densityDpi / 30f);
                 if (power >= 100f) power -= 200f;
                 if (power <= -100f) power += 200f;
             }
@@ -224,7 +261,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     }
 
     public interface FilterAdapterCallback {
-        void changeState(int pos, float value);
+        void changeState(int pos, float value, int color);
     }
 
     static class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
