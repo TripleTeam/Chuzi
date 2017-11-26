@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.Pair;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,12 +66,19 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initStatusBar();
 
         initViews();
         initRecyclerView();
 
         subscribeToFilterUpdates();
         filterPublishSubject.onNext(filter);
+    }
+
+    private void initStatusBar() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     private void initViews() {
