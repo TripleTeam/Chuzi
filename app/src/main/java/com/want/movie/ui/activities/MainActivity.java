@@ -58,6 +58,11 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     private TextView f3;
     private TextView f4;
 
+    private View r1;
+    private View r2;
+    private View r3;
+    private View r4;
+
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private RecyclerView movieRecyclerView;
 
@@ -116,6 +121,12 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         f3 = findViewById(R.id.filter_3);
         f4 = findViewById(R.id.filter_4);
 
+        r1 = findViewById(R.id.round1);
+        r2 = findViewById(R.id.round2);
+        r3 = findViewById(R.id.round3);
+        r4 = findViewById(R.id.round4);
+
+
         pager = findViewById(R.id.main_pager);
         adapter = new FilterPagerAdapter(this, this);
         pager.setAdapter(adapter);
@@ -140,17 +151,70 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
             }
         });
+        pageSelected(0);
     }
 
     private void pageSelected(int position) {
+        FilterPagerAdapter.FilterForPager[] filters = adapter.filters;
+        FilterPagerAdapter.FilterForPager filter = filters[position];
+        int backgroundColor = adapter.getFilterColor(filter);
+        int textColor = backgroundColorToTextColor(backgroundColor);
+        if (position == 0) {
+            r2.setBackgroundColor(Color.TRANSPARENT);
+            r3.setBackgroundColor(Color.TRANSPARENT);
+            r4.setBackgroundColor(Color.TRANSPARENT);
+
+            f2.setTextColor(Color.WHITE);
+            f3.setTextColor(Color.WHITE);
+            f4.setTextColor(Color.WHITE);
+
+
+            r1.setBackgroundColor(backgroundColor);
+            f1.setTextColor(textColor);
+        } else if (position == 1) {
+            r1.setBackgroundColor(Color.TRANSPARENT);
+            r3.setBackgroundColor(Color.TRANSPARENT);
+            r4.setBackgroundColor(Color.TRANSPARENT);
+
+
+            f1.setTextColor(Color.WHITE);
+            f3.setTextColor(Color.WHITE);
+            f4.setTextColor(Color.WHITE);
+
+            r2.setBackgroundColor(backgroundColor);
+            f2.setTextColor(textColor);
+        } else if (position == 2) {
+            r1.setBackgroundColor(Color.TRANSPARENT);
+            r2.setBackgroundColor(Color.TRANSPARENT);
+            r4.setBackgroundColor(Color.TRANSPARENT);
+
+
+            f1.setTextColor(Color.WHITE);
+            f2.setTextColor(Color.WHITE);
+            f4.setTextColor(Color.WHITE);
+
+            r3.setBackgroundColor(backgroundColor);
+            f3.setTextColor(textColor);
+        } else if (position == 3) {
+            r1.setBackgroundColor(Color.TRANSPARENT);
+            r2.setBackgroundColor(Color.TRANSPARENT);
+            r3.setBackgroundColor(Color.TRANSPARENT);
+
+
+            f1.setTextColor(Color.WHITE);
+            f2.setTextColor(Color.WHITE);
+            f3.setTextColor(Color.WHITE);
+            r4.setBackgroundColor(backgroundColor);
+            f4.setTextColor(textColor);
+        }
 
     }
 
     private void initClickableTabs() {
-        initClickableTab(f1, 0);
-        initClickableTab(f2, 1);
-        initClickableTab(f3, 2);
-        initClickableTab(f4, 3);
+        initClickableTab(r1, 0);
+        initClickableTab(r2, 1);
+        initClickableTab(r3, 2);
+        initClickableTab(r4, 3);
     }
 
     private void initClickableTab(View view, final int position) {
@@ -164,69 +228,89 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
 
     @Override
-    public void changeState(int pos, float value, int color, boolean playSound, int sound) {
+    public void changeState(int pos, float value, int color, boolean playSound, int sound, boolean ignoreColor) {
         int intValue = (int) value;
         String text = String.format(Locale.US, "%d%%", intValue);
         switch (pos) {
             case 0:
-                updateBullets(text, intValue, color);
+                updateBullets(text, intValue, color, ignoreColor);
                 if (playSound && pool != null) {
                     if (sound == 0) pool.play(sLoad, 1f, 1f, 1, 0, 1f);
                     if (sound == 1) pool.play(sDrop, 1f, 1f, 1, 0, 1f);
                 }
                 break;
             case 1:
-                updateHappiness(text, intValue, color);
+                updateHappiness(text, intValue, color, ignoreColor);
                 break;
             case 2:
-                updateBrightness(text, intValue, color);
+                updateBrightness(text, intValue, color, ignoreColor);
                 break;
             case 3:
-                updateSexuality(text, intValue, color);
+                updateSexuality(text, intValue, color, ignoreColor);
                 break;
         }
 
         filterPublishSubject.onNext(filter);
     }
 
-    private void updateBullets(String text, int intValue, int color) {
+    private void clearBackroundsAndTextColor() {
+        r1.setBackgroundColor(Color.TRANSPARENT);
+        r2.setBackgroundColor(Color.TRANSPARENT);
+        r3.setBackgroundColor(Color.TRANSPARENT);
+        r4.setBackgroundColor(Color.TRANSPARENT);
+
+        f1.setTextColor(Color.WHITE);
+        f2.setTextColor(Color.WHITE);
+        f3.setTextColor(Color.WHITE);
+        f4.setTextColor(Color.WHITE);
+    }
+
+
+    private void updateBullets(String text, int intValue, int color, boolean ignoreColor) {
         f1.setText(text);
         filter.setBullets(intValue);
-        f1.setBackgroundColor(color);
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0x00FF00) >> 8;
-        int b = color & 0x0000FF;
-        f1.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        if (!ignoreColor) {
+            r1.setBackgroundColor(color);
+            int textColor = backgroundColorToTextColor(color);
+            f1.setTextColor(textColor);
+        }
     }
 
-    private void updateHappiness(String text, int intValue, int color) {
+    private void updateHappiness(String text, int intValue, int color, boolean ignoreColor) {
         f2.setText(text);
         filter.setHappiness(intValue);
-        f2.setBackgroundColor(color);
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0x00FF00) >> 8;
-        int b = color & 0x0000FF;
-        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        if (!ignoreColor) {
+            r2.setBackgroundColor(color);
+            int textColor = backgroundColorToTextColor(color);
+            f2.setTextColor(textColor);
+        }
     }
 
-    private void updateBrightness(String text, int intValue, int color) {
+    private void updateBrightness(String text, int intValue, int color, boolean ignoreColor) {
         f3.setText(text);
         filter.setBrightness(intValue);
-        f3.setBackgroundColor(color);
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0x00FF00) >> 8;
-        int b = color & 0x0000FF;
-        f3.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        if (!ignoreColor) {
+            r3.setBackgroundColor(color);
+            int textColor = backgroundColorToTextColor(color);
+            f3.setTextColor(textColor);
+        }
     }
 
-    private void updateSexuality(String text, int intValue, int color) {
+    private void updateSexuality(String text, int intValue, int color, boolean ignoreColor) {
         f4.setText(text);
         filter.setSexuality(intValue);
-        f4.setBackgroundColor(color);
+        if (!ignoreColor) {
+            r4.setBackgroundColor(color);
+            int textColor = backgroundColorToTextColor(color);
+            f4.setTextColor(textColor);
+        }
+    }
+
+    private int backgroundColorToTextColor(int color) {
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0x00FF00) >> 8;
         int b = color & 0x0000FF;
-        f4.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        return 1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE;
     }
 
     private void initRecyclerView() {

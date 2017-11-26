@@ -28,7 +28,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     private FilterAdapterCallback callback;
     private int item;
     private final GestureDetector detector;
-    private FilterForPager[] filters;
+    public FilterForPager[] filters;
     private String[] texts = new String[]{
             "How many gun shots in the film?",
             "How much happiness in the film?",
@@ -183,12 +183,19 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         );
     }
 
+    int initiated = 0;
+
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_filter, container, false);
 
         item = position;
-        setState(view, filters[position]);
+
+        boolean ignoreColor = true;
+        if (position == 0) {
+            ignoreColor = false;
+        }
+        setState(view, filters[position], ignoreColor);
         setText(view, texts[position]);
         if (position != 2) {
             applyMargin(view.findViewById(R.id.filter_image));
@@ -196,6 +203,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
         view.setTag(position);
         container.addView(view);
+        initiated++;
         return view;
     }
 
@@ -213,7 +221,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         textView.setText(text);
     }
 
-    private void setState(View view, FilterForPager filter) {
+    private void setState(View view, FilterForPager filter, boolean ignoreColor) {
         ImageView image = view.findViewById(R.id.filter_image);
 
         float state = item == 2 ? Math.abs(filter.state) : filter.state;
@@ -237,6 +245,14 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             filter.resIndex = ceil;
         }
 
+        int rgb = getFilterColor(filter);
+        view.setBackgroundColor(rgb);
+
+        callback.changeState(item, state, rgb, playSound, sound, ignoreColor);
+    }
+
+    public int getFilterColor(FilterForPager filter) {
+        float state = item == 2 ? Math.abs(filter.state) : filter.state;
         int r1 = (filter.fullColor & 0xFF0000) >> 16;
         int g1 = (filter.fullColor & 0x00FF00) >> 8;
         int b1 = filter.fullColor & 0x0000FF;
@@ -245,14 +261,11 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         int b2 = filter.noneColor & 0x0000FF;
 
         float t = state / 100;
-        int rgb = Color.rgb(
+        return Color.rgb(
                 (int) (r1 * t + r2 * (1 - t)),
                 (int) (g1 * t + g2 * (1 - t)),
                 (int) (b1 * t + b2 * (1 - t))
         );
-        view.setBackgroundColor(rgb);
-
-        callback.changeState(item, state, rgb, playSound, sound);
     }
 
     @Override
@@ -322,7 +335,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             }
 
             filters[item].state = power;
-            setState(v, filters[item]);
+            setState(v, filters[item], false);
         }
 
 
@@ -330,7 +343,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     }
 
     public interface FilterAdapterCallback {
-        void changeState(int pos, float value, int color, boolean playSound, int sound);
+        void changeState(int pos, float value, int color, boolean playSound, int sound, boolean ignoreColor);
     }
 
     static class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
@@ -350,7 +363,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         }
     }
 
-    static class FilterForPager {
+    public static class FilterForPager {
         float state;
 
         int fullColor;
