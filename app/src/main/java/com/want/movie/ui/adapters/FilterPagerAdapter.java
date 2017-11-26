@@ -76,26 +76,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 50f,
                 Color.parseColor("#80C2FF"),
                 Color.parseColor("#0F1C3F"),
-                R.drawable.moon1,
-                R.drawable.moon2,
-                R.drawable.moon3,
-                R.drawable.moon4,
-                R.drawable.moon5,
-                R.drawable.moon6,
-                R.drawable.moon7,
-                R.drawable.moon8,
-                R.drawable.moon9,
-                R.drawable.moon10,
-                R.drawable.moon11,
-                R.drawable.moon12,
-                R.drawable.moon13,
-                R.drawable.moon14,
-                R.drawable.moon15,
-                R.drawable.moon16,
-                R.drawable.moon18,
-                R.drawable.moon19,
-                R.drawable.moon20,
-                R.drawable.moon21,
                 R.drawable.sun21,
                 R.drawable.sun20,
                 R.drawable.sun19,
@@ -116,7 +96,69 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 R.drawable.sun4,
                 R.drawable.sun3,
                 R.drawable.sun2,
-                R.drawable.sun1
+                R.drawable.sun1,
+                R.drawable.moon41,
+                R.drawable.moon40,
+                R.drawable.moon39,
+                R.drawable.moon38,
+                R.drawable.moon37,
+                R.drawable.moon36,
+                R.drawable.moon35,
+                R.drawable.moon34,
+                R.drawable.moon33,
+                R.drawable.moon32,
+                R.drawable.moon31,
+                R.drawable.moon30,
+                R.drawable.moon29,
+                R.drawable.moon28,
+                R.drawable.moon27,
+                R.drawable.moon26,
+                R.drawable.moon25,
+                R.drawable.moon24,
+                R.drawable.moon23,
+                R.drawable.moon22,
+                R.drawable.moon21,
+                R.drawable.moon20,
+                R.drawable.moon19,
+                R.drawable.moon18,
+                R.drawable.moon17,
+                R.drawable.moon16,
+                R.drawable.moon15,
+                R.drawable.moon14,
+                R.drawable.moon13,
+                R.drawable.moon12,
+                R.drawable.moon11,
+                R.drawable.moon10,
+                R.drawable.moon9,
+                R.drawable.moon8,
+                R.drawable.moon7,
+                R.drawable.moon6,
+                R.drawable.moon5,
+                R.drawable.moon4,
+                R.drawable.moon3,
+                R.drawable.moon2,
+                R.drawable.moon1,
+                R.drawable.sun41,
+                R.drawable.sun40,
+                R.drawable.sun39,
+                R.drawable.sun38,
+                R.drawable.sun37,
+                R.drawable.sun36,
+                R.drawable.sun35,
+                R.drawable.sun34,
+                R.drawable.sun33,
+                R.drawable.sun32,
+                R.drawable.sun31,
+                R.drawable.sun30,
+                R.drawable.sun29,
+                R.drawable.sun28,
+                R.drawable.sun27,
+                R.drawable.sun26,
+                R.drawable.sun25,
+                R.drawable.sun24,
+                R.drawable.sun23,
+                R.drawable.sun22,
+                R.drawable.sun21
         );
 
         filters[3] = new FilterForPager(
@@ -168,6 +210,21 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         if (ceil < 0) ceil = 0;
         image.setImageResource(filter.sprites[ceil]);
 
+        boolean playSound = false;
+        int sound = 0;
+        if (item == 0) {
+            if (filter.resIndex >= 0) {
+                if (ceil > filter.resIndex) {
+                    playSound = true;
+                    sound = 0;
+                } else if (ceil < filter.resIndex) {
+                    playSound = true;
+                    sound = 1;
+                }
+            }
+            filter.resIndex = ceil;
+        }
+
         int r1 = (filter.fullColor & 0xFF0000) >> 16;
         int g1 = (filter.fullColor & 0x00FF00) >> 8;
         int b1 = filter.fullColor & 0x0000FF;
@@ -183,7 +240,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         );
         view.setBackgroundColor(rgb);
 
-        callback.changeState(item, state, rgb);
+        callback.changeState(item, state, rgb, playSound, sound);
     }
 
     @Override
@@ -261,7 +318,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     }
 
     public interface FilterAdapterCallback {
-        void changeState(int pos, float value, int color);
+        void changeState(int pos, float value, int color, boolean playSound, int sound);
     }
 
     static class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
@@ -290,6 +347,8 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
         @DrawableRes
         int[] sprites;
+
+        int resIndex = -1;
 
         public FilterForPager(float state, int fullColor, int noneColor, @DrawableRes int... sprites) {
             this.state = state;

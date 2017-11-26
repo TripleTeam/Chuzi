@@ -1,6 +1,8 @@
 package com.want.movie.ui.activities;
 
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -63,6 +65,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     private final List<Movie> movies = new ArrayList<>();
     private final Filter filter = new Filter(50, 50, 50, 50);
 
+    private SoundPool pool;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +78,29 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
         subscribeToFilterUpdates();
         filterPublishSubject.onNext(filter);
+    }
+
+    private int sLoad;
+    private int sDrop;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pool == null) {
+            pool = new SoundPool.Builder()
+                    .setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build())
+                    .setMaxStreams(16)
+                    .build();
+            sLoad = pool.load(MainActivity.this, R.raw.clip_load, 1);
+            sDrop = pool.load(MainActivity.this, R.raw.bullet_drop, 1);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pool.release();
+        pool = null;
     }
 
     private void initStatusBar() {
@@ -97,15 +124,19 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     }
 
     @Override
-    public void changeState(int pos, float value, int color) {
+    public void changeState(int pos, float value, int color, boolean playSound, int sound) {
         String text = String.format(Locale.US, "%.2f", value);
         int intValue = (int) value;
         switch (pos) {
             case 0:
-                updateHappiness(text, intValue, color);
+                updateBullets(text, intValue, color);
+                if (playSound && pool != null) {
+                    if (sound == 0) pool.play(sLoad, 1f, 1f, 1, 0, 1f);
+                    if (sound == 1) pool.play(sDrop, 1f, 1f, 1, 0, 1f);
+                }
                 break;
             case 1:
-                updateBullets(text, intValue, color);
+                updateHappiness(text, intValue, color);
                 break;
             case 2:
                 updateBrightness(text, intValue, color);
@@ -118,14 +149,24 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         filterPublishSubject.onNext(filter);
     }
 
-    private void updateSexuality(String text, int intValue, int color) {
-        f4.setText(text);
-        filter.setSexuality(intValue);
-        f4.setBackgroundColor(color);
+    private void updateBullets(String text, int intValue, int color) {
+        f1.setText(text);
+        filter.setBullets(intValue);
+        f1.setBackgroundColor(color);
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0x00FF00) >> 8;
         int b = color & 0x0000FF;
-        f4.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        f1.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+    }
+
+    private void updateHappiness(String text, int intValue, int color) {
+        f2.setText(text);
+        filter.setHappiness(intValue);
+        f2.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
     private void updateBrightness(String text, int intValue, int color) {
@@ -138,24 +179,14 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         f3.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
-    private void updateBullets(String text, int intValue, int color) {
-        f1.setText(text);
-        filter.setHappiness(intValue);
-        f1.setBackgroundColor(color);
+    private void updateSexuality(String text, int intValue, int color) {
+        f4.setText(text);
+        filter.setSexuality(intValue);
+        f4.setBackgroundColor(color);
         int r = (color & 0xFF0000) >> 16;
         int g = (color & 0x00FF00) >> 8;
         int b = color & 0x0000FF;
-        f1.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
-    }
-
-    private void updateHappiness(String text, int intValue, int color) {
-        f2.setText(text);
-        filter.setBullets(intValue);
-        f2.setBackgroundColor(color);
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0x00FF00) >> 8;
-        int b = color & 0x0000FF;
-        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+        f4.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
     private void initRecyclerView() {
