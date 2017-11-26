@@ -1,10 +1,13 @@
 package com.want.movie.ui.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.PagerAdapter;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,7 +36,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
 
 
         filters[0] = new FilterForPager(
-                24f,
+                50f,
                 Color.parseColor("#3B2ED2"),
                 Color.parseColor("#3B2ED2"),
                 R.drawable.b0,
@@ -63,28 +66,35 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         );
 
         filters[2] = new FilterForPager(
-                0,
-                Color.RED,
-                Color.GRAY,
-                R.mipmap.ic_launcher);
+                50f,
+                Color.parseColor("#80C2FF"),
+                Color.parseColor("#0F1C3F"),
+                R.drawable.lips1,
+                R.drawable.lips2,
+                R.drawable.lips3,
+                R.drawable.lips4,
+                R.drawable.lips5
+        );
 
         filters[3] = new FilterForPager(
-                50,
-                Color.parseColor("#27549C"),
-                Color.parseColor("#27549C"),
-                R.drawable.h13,
-                R.drawable.h12,
-                R.drawable.h11,
-                R.drawable.h10,
-                R.drawable.h9,
-                R.drawable.h8,
-                R.drawable.h7,
-                R.drawable.h6,
-                R.drawable.h5,
-                R.drawable.h4,
-                R.drawable.h3,
+                50f,
+                Color.parseColor("#000000"),
+                Color.parseColor("#000000"),
+                R.drawable.h1,
                 R.drawable.h2,
-                R.drawable.h1
+                R.drawable.h3,
+                R.drawable.h4,
+                R.drawable.h5,
+                R.drawable.h6,
+                R.drawable.h7,
+                R.drawable.h8,
+                R.drawable.h9,
+                R.drawable.h10,
+                R.drawable.h11,
+                R.drawable.h12,
+                R.drawable.h13,
+                R.drawable.h14,
+                R.drawable.h15
         );
     }
 
@@ -92,6 +102,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     public Object instantiateItem(final ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_filter, container, false);
 
+        item = position;
         setState(view, filters[position]);
 
         view.setTag(position);
@@ -102,7 +113,9 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     private void setState(View view, FilterForPager filter) {
         ImageView image = view.findViewById(R.id.filter_image);
 
-        int ceil = (int) Math.floor((filter.state / 101f) * filter.sprites.length);
+        float state = item == 2 ? Math.abs(filter.state) : filter.state;
+
+        int ceil = (int) Math.floor((state / 101f) * filter.sprites.length);
         if (ceil < 0) ceil = 0;
         image.setImageResource(filter.sprites[ceil]);
 
@@ -113,7 +126,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         int g2 = (filter.noneColor & 0x00FF00) >> 8;
         int b2 = filter.noneColor & 0x0000FF;
 
-        float t = filter.state / 100;
+        float t = state / 100;
         int rgb = Color.rgb(
                 (int) (r1 * t + r2 * (1 - t)),
                 (int) (g1 * t + g2 * (1 - t)),
@@ -121,6 +134,7 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         );
         view.setBackgroundColor(rgb);
 
+        callback.changeState(item, state);
     }
 
     @Override
@@ -147,7 +161,6 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         }
         View v = (View) object;
 
-
         v.setOnTouchListener(this);
         item = position;
     }
@@ -173,19 +186,23 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             float yTop = y - v.getTop();
             float yBot = y - v.getBottom();
             if (yTop < 0 || yBot > 0) return true;
-//            float t = (v.getHeight() - y) / v.getHeight();
-//            if (t > 1) t = 1;
-//            else if (t < 0) t = 0;
 
             float yFirst = event.getHistorySize() < 1 ? event.getY() : event.getHistoricalY(0);
             float yLast = event.getY();
+            DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+            Log.d("ONTOUCH", "d=" + metrics.densityDpi / 160f);
 
-            float power = filters[item].state + (yFirst - yLast) / 10f;
-            if (power >= 100f) power = 100f;
-            if (power <= 0f) power = 0f;
+
+            float power = filters[item].state + (yFirst - yLast) / (metrics.densityDpi / 40f);
+            if (item != 2) {
+                if (power >= 100f) power = 100f;
+                if (power <= 0f) power = 0f;
+            } else {
+                if (power >= 100f) power -= 200f;
+                if (power <= -100f) power += 200f;
+            }
 
             filters[item].state = power;
-            callback.changeState(item, power);
             setState(v, filters[item]);
         }
 
@@ -208,23 +225,8 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             return true;
         }
 
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_MAX_OFF_PATH = 200;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 100;
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            try {
-//                // downward swipe
-//                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
-//                    return true;
-//                else if (Math.abs(e2.getY() - e1.getY()) > SWIPE_MAX_OFF_PATH && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY)
-//                    return true;
-//                    // right to left swipe
-//                else return false;
-//            } catch (Exception e) {
-//                // nothing
-//            }
             return false;
         }
     }

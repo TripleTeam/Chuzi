@@ -73,17 +73,17 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     }
 
     private void initViews() {
+        f1 = findViewById(R.id.filter_1);
+        f2 = findViewById(R.id.filter_2);
+        f3 = findViewById(R.id.filter_3);
+        f4 = findViewById(R.id.filter_4);
+
         pager = findViewById(R.id.main_pager);
         adapter = new FilterPagerAdapter(this, this);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(4);
         CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
-
-        f1 = findViewById(R.id.filter_1);
-        f2 = findViewById(R.id.filter_2);
-        f3 = findViewById(R.id.filter_3);
-        f4 = findViewById(R.id.filter_4);
     }
 
     @Override
