@@ -46,6 +46,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     private static final String MOVIE_DETAIL_TAG = "movie_detail_tag";
     private static final long FILTER_DEBOUNCE_MILLIS = 300L;
+    private boolean isPointerShown = false;
     private ViewPager pager;
     private FilterPagerAdapter adapter;
     private TextView f1;
