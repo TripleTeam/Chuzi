@@ -96,8 +96,8 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 R.drawable.sun4,
                 R.drawable.sun3,
                 R.drawable.sun2,
-                R.drawable.sun1,
-                R.drawable.moon41,
+//                R.drawable.sun1,
+//                R.drawable.moon41,
                 R.drawable.moon40,
                 R.drawable.moon39,
                 R.drawable.moon38,
@@ -138,7 +138,8 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 R.drawable.moon3,
                 R.drawable.moon2,
                 R.drawable.moon1,
-                R.drawable.sun41,
+//                R.drawable.sun41,
+                R.drawable.sun40,
                 R.drawable.sun40,
                 R.drawable.sun39,
                 R.drawable.sun38,
@@ -240,6 +241,22 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
                 } else if (ceil < filter.resIndex) {
                     playSound = true;
                     sound = 1;
+                }
+            }
+            filter.resIndex = ceil;
+        }
+        if (item == 1) {
+            if (filter.resIndex >= 0) {
+                if (ceil == 0 && ceil != filter.resIndex) {
+                    playSound = true;
+                }
+            }
+            filter.resIndex = ceil;
+        }
+        if (item == 3) {
+            if (filter.resIndex >= 0) {
+                if (ceil == filter.sprites.length - 1 && ceil != filter.resIndex) {
+                    playSound = true;
                 }
             }
             filter.resIndex = ceil;
