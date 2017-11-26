@@ -75,6 +75,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
         initViews();
         initRecyclerView();
+        initClickableTabs();
 
         subscribeToFilterUpdates();
         filterPublishSubject.onNext(filter);
@@ -122,6 +123,23 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
     }
+
+    private void initClickableTabs() {
+        initClickableTab(f1, 0);
+        initClickableTab(f2, 1);
+        initClickableTab(f3, 2);
+        initClickableTab(f4, 3);
+    }
+
+    private void initClickableTab(View view, final int position) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(position);
+            }
+        });
+    }
+
 
     @Override
     public void changeState(int pos, float value, int color, boolean playSound, int sound) {
