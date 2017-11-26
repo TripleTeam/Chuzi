@@ -7,6 +7,6 @@
     <color name="black">#000000</color>
     <color name="black_opacity_50">#80000000</color>
 
-    <color name="windowBackgroundColor">@color/white</color>
+    <color name="windowBackgroundColor">#333333</color>
     <color name="placeholder_color">#A5A5A5</color>
 </resources>
