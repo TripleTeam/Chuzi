@@ -186,7 +186,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
             case 3:
                 updateSexuality(text, intValue, color);
                 if (playSound && pool != null) {
-                    pool.play(sWhistle, 0.7f, 0.7f, 1, 0, 1f);
+                    pool.play(sWhistle, 0.5f, 0.5f, 1, 0, 1f);
                 }
                 break;
         }
