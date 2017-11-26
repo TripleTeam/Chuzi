@@ -26,7 +26,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100.00" />
+            android:text="50.00" />
 
         <TextView
             android:id="@+id/filter_2"
@@ -34,7 +34,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100.00" />
+            android:text="50.00" />
 
         <TextView
             android:id="@+id/filter_3"
@@ -42,7 +42,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100.00" />
+            android:text="50.00" />
 
         <TextView
             android:id="@+id/filter_4"
@@ -50,7 +50,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="100.00" />
+            android:text="50.00" />
 
     </LinearLayout>
 
