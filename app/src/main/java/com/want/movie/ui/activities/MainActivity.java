@@ -122,6 +122,28 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         pager.setOffscreenPageLimit(4);
         CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageSelected(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void pageSelected(int position) {
+
     }
 
     private void initClickableTabs() {
