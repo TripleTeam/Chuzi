@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.want.movie.R;
 
@@ -25,6 +26,12 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
     private int item;
     private final GestureDetector detector;
     private FilterForPager[] filters;
+    private String[] texts = new String[]{
+            "How many gun shots in the film?",
+            "How much happiness in the film?",
+            "Is the film bright enough?",
+            "What about sexuality in the film?"
+    };
 
     public FilterPagerAdapter(Context context, FilterAdapterCallback callback) {
         this.detector = new GestureDetector(context, new MyGestureDetector());
@@ -93,10 +100,16 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_filter, container, false);
 
         setState(view, filters[position]);
+        setText(view, texts[position]);
 
         view.setTag(position);
         container.addView(view);
         return view;
+    }
+
+    private void setText(View view, String text) {
+        TextView textView = view.findViewById(R.id.filterText);
+        textView.setText(text);
     }
 
     private void setState(View view, FilterForPager filter) {
