@@ -125,8 +125,8 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     @Override
     public void changeState(int pos, float value, int color, boolean playSound, int sound) {
-        String text = String.format(Locale.US, "%.2f", value);
         int intValue = (int) value;
+        String text = String.format(Locale.US, "%d%%", intValue);
         switch (pos) {
             case 0:
                 updateBullets(text, intValue, color);
