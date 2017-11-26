@@ -2,6 +2,7 @@
 <resources>
     <dimen name="movie_horizontal_space">16dp</dimen>
     <dimen name="movie_image_width">85dp</dimen>
+    <dimen name="movie_image_height">128dp</dimen>
     <dimen name="detail_text_size">16sp</dimen>
     <dimen name="watch_now_radius">7dp</dimen>
     <dimen name="dialog_radius">14dp</dimen>

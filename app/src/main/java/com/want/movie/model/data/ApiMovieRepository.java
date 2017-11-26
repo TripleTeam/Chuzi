@@ -45,8 +45,8 @@ public enum ApiMovieRepository implements MovieRepository {
     @Override
     public Single<List<Movie>> getMovies(@NonNull Filter filter) {
         return movieService.getMovies(filter.getHappiness(),
-                filter.getBrightness(),
                 filter.getBullets(),
+                filter.getBrightness(),
                 filter.getSexuality()
         );
     }
