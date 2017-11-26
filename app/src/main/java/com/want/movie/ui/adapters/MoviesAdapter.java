@@ -55,6 +55,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         TextView titleView = itemView.findViewById(R.id.movieTitle);
         ImageView imageView = itemView.findViewById(R.id.movieCover);
+        RequestOptions options;
 
         MovieViewHolder(View itemView, final OnItemClickedListener onItemClickedListener) {
             super(itemView);
@@ -64,12 +65,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     onItemClickedListener.onItemClicked(getAdapterPosition());
                 }
             });
+            options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_background)
+                    .error(R.drawable.placeholder_background);
         }
 
         void bindMovie(Movie movie) {
             titleView.setText(movie.getTitle());
             Glide
                     .with(imageView.getContext())
+                    .setDefaultRequestOptions(options)
                     .load(movie.getCover())
                     .apply(RequestOptions.fitCenterTransform())
                     .into(imageView);

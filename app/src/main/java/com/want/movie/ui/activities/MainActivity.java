@@ -75,6 +75,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
         initViews();
         initRecyclerView();
+        initClickableTabs();
 
         subscribeToFilterUpdates();
         filterPublishSubject.onNext(filter);
@@ -123,12 +124,51 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         pager.setOffscreenPageLimit(4);
         CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageSelected(position);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
+
+    private void pageSelected(int position) {
+
+    }
+
+    private void initClickableTabs() {
+        initClickableTab(f1, 0);
+        initClickableTab(f2, 1);
+        initClickableTab(f3, 2);
+        initClickableTab(f4, 3);
+    }
+
+    private void initClickableTab(View view, final int position) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(position);
+            }
+        });
+    }
+
 
     @Override
     public void changeState(int pos, float value, int color, boolean playSound, int sound) {
-        String text = String.format(Locale.US, "%.0f %%", value);
         int intValue = (int) value;
+        String text = String.format(Locale.US, "%d%%", intValue);
         switch (pos) {
             case 0:
                 updateBullets(text, intValue, color);

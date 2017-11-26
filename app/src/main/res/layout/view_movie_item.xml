@@ -21,7 +21,7 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="@dimen/detail_text_size"
         tools:text="Name of movieww will be here" />
 </RelativeLayout>

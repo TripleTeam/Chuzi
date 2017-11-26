@@ -31,6 +31,11 @@ public class MovieInfoDialogFragment extends DialogFragment {
     private TextView movieGenreYear;
     private View watchNow;
 
+    private RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_background)
+                    .error(R.drawable.placeholder_background);
+
 
     public static MovieInfoDialogFragment newInstance(Movie movie) {
         MovieInfoDialogFragment fragment = new MovieInfoDialogFragment();
@@ -73,6 +78,7 @@ public class MovieInfoDialogFragment extends DialogFragment {
         movieTitle.setText(movie.getTitle());
         Glide
                 .with(this)
+                .setDefaultRequestOptions(options)
                 .load(movie.getCover())
                 .apply(RequestOptions.fitCenterTransform())
                 .into(movieImage);

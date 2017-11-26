@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/movieImage"
         android:layout_width="@dimen/movie_image_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/movie_image_height"
         android:contentDescription="@string/content_description_movie_poster"
         tools:src="@drawable/ic_launcher_background" />
 

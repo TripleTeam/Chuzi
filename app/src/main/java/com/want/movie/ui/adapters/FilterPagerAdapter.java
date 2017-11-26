@@ -190,10 +190,22 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
         item = position;
         setState(view, filters[position]);
         setText(view, texts[position]);
+        if (position != 2) {
+            applyMargin(view.findViewById(R.id.filter_image));
+        }
 
         view.setTag(position);
         container.addView(view);
         return view;
+    }
+
+    private void applyMargin(View viewById) {
+        int top = viewById.getContext().getResources().getDimensionPixelSize(R.dimen.image_margin_top);
+        int bottom = viewById.getContext().getResources().getDimensionPixelSize(R.dimen.image_margin_bottom);
+//        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) viewById.getLayoutParams();
+//        lp.setMargins(0, top, 0, bottom);
+        viewById.setPadding(0, top, 0, bottom);
+//        viewById.setLayoutParams(lp);
     }
 
     private void setText(View view, String text) {
