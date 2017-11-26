@@ -224,6 +224,22 @@ public class FilterPagerAdapter extends PagerAdapter implements View.OnTouchList
             }
             filter.resIndex = ceil;
         }
+        if (item == 1) {
+            if (filter.resIndex >= 0) {
+                if (ceil == 0 && ceil != filter.resIndex) {
+                    playSound = true;
+                }
+            }
+            filter.resIndex = ceil;
+        }
+        if (item == 3) {
+            if (filter.resIndex >= 0) {
+                if (ceil == filter.sprites.length - 1 && ceil != filter.resIndex) {
+                    playSound = true;
+                }
+            }
+            filter.resIndex = ceil;
+        }
 
         int r1 = (filter.fullColor & 0xFF0000) >> 16;
         int g1 = (filter.fullColor & 0x00FF00) >> 8;

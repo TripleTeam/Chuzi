@@ -82,6 +82,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     private int sLoad;
     private int sDrop;
+    private int sWhistle;
 
     @Override
     protected void onResume() {
@@ -93,6 +94,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                     .build();
             sLoad = pool.load(MainActivity.this, R.raw.clip_load, 1);
             sDrop = pool.load(MainActivity.this, R.raw.bullet_drop, 1);
+            sWhistle = pool.load(MainActivity.this, R.raw.whistle, 1);
         }
     }
 
@@ -125,7 +127,7 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
 
     @Override
     public void changeState(int pos, float value, int color, boolean playSound, int sound) {
-        String text = String.format(Locale.US, "%.2f", value);
+        String text = String.format(Locale.US, "%.0f %%", value);
         int intValue = (int) value;
         switch (pos) {
             case 0:
@@ -143,6 +145,9 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
                 break;
             case 3:
                 updateSexuality(text, intValue, color);
+                if (playSound && pool != null) {
+                    pool.play(sWhistle, 0.7f, 0.7f, 1, 0, 1f);
+                }
                 break;
         }
 
