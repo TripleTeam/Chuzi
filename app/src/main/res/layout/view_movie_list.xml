@@ -7,4 +7,5 @@
     android:paddingLeft="@dimen/movie_horizontal_space"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
+    android:background="@drawable/movie_gradient"
     android:scrollbarStyle="outsideOverlay" />
