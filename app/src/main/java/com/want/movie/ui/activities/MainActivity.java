@@ -139,16 +139,6 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
     }
 
     private void updateBullets(String text, int intValue, int color) {
-        f2.setText(text);
-        filter.setBullets(intValue);
-        f2.setBackgroundColor(color);
-        int r = (color & 0xFF0000) >> 16;
-        int g = (color & 0x00FF00) >> 8;
-        int b = color & 0x0000FF;
-        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
-    }
-
-    private void updateHappiness(String text, int intValue, int color) {
         f1.setText(text);
         filter.setHappiness(intValue);
         f1.setBackgroundColor(color);
@@ -156,6 +146,16 @@ public class MainActivity extends ActivityBase implements FilterPagerAdapter.Fil
         int g = (color & 0x00FF00) >> 8;
         int b = color & 0x0000FF;
         f1.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
+    }
+
+    private void updateHappiness(String text, int intValue, int color) {
+        f2.setText(text);
+        filter.setBullets(intValue);
+        f2.setBackgroundColor(color);
+        int r = (color & 0xFF0000) >> 16;
+        int g = (color & 0x00FF00) >> 8;
+        int b = color & 0x0000FF;
+        f2.setTextColor(1 - (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.5 ? Color.BLACK : Color.WHITE);
     }
 
     private void initRecyclerView() {
