@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum ApiMovieRepository implements MovieRepository {
     INSTANCE;
 
-    private static final String BASE_URL = "http://176.192.212.47:8886/api/";
+    private static final String BASE_URL = "http://chuzi_backend.aiaiai.team/api/";
     private final MovieService movieService;
 
     ApiMovieRepository() {
