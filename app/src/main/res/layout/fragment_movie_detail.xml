@@ -59,7 +59,7 @@
         android:background="@drawable/watch_now_background"
         android:gravity="center"
         android:padding="8dp"
-        android:text="@string/watch_now"
+        android:text="@string/movie_dialog_accept_button"
         android:textColor="@color/white"
         android:textSize="@dimen/detail_text_size"
         tools:ignore="MissingPrefix" />

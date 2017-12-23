@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Chuzi</string>
     <string name="content_description_movie_poster">Movie poster</string>
-    <string name="watch_now">Watch now</string>
+    <string name="movie_dialog_accept_button">OK</string>
 </resources>
