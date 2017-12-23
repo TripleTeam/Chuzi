@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/movie_item_height">
 
     <ImageView
         android:id="@+id/movieCover"
@@ -22,5 +22,5 @@
         android:maxLines="2"
         android:textColor="@color/white"
         android:textSize="@dimen/detail_text_size"
-        tools:text="Name of movieww will be here" />
+        tools:text="Name of movie ww will be here" />
 </RelativeLayout>

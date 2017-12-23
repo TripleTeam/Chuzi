@@ -9,10 +9,13 @@
     <dimen name="dialog_radius">14dp</dimen>
     <dimen name="dialog_height">465dp</dimen>
     <dimen name="dialog_width">310dp</dimen>
-    
+
     <dimen name="image_margin_bottom">32dp</dimen>
     <dimen name="image_margin_top">88dp</dimen>
     <dimen name="round_margin">8dp</dimen>
     <dimen name="round_vertical_margin">8dp</dimen>
     <dimen name="text_filter_vertical_padding">4dp</dimen>
+
+    <dimen name="movie_item_height">190dp</dimen>
+    <dimen name="movie_recycler_height">206dp</dimen>
 </resources>
