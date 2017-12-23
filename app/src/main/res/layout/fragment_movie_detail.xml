@@ -9,8 +9,7 @@
         android:id="@+id/movieImage"
         android:layout_width="@dimen/movie_image_width"
         android:layout_height="@dimen/movie_image_height"
-        android:contentDescription="@string/content_description_movie_poster"
-        tools:src="@drawable/ic_launcher_background" />
+        android:contentDescription="@string/content_description_movie_poster" />
 
     <TextView
         android:id="@+id/movieTitle"
@@ -33,7 +32,7 @@
         android:layout_alignStart="@id/movieTitle"
         android:layout_below="@id/movieTitle"
         android:layout_marginTop="8dp"
-        android:textColor="@color/black_opacity_50"
+        android:textColor="@color/blackOpacity50"
         android:textSize="@dimen/detail_text_size"
         tools:text="1994" />
 

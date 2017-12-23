@@ -8,8 +8,7 @@
         android:id="@+id/movieCover"
         android:layout_width="@dimen/movie_image_width"
         android:layout_height="@dimen/movie_image_height"
-        android:contentDescription="@string/content_description_movie_poster"
-        tools:src="@drawable/ic_launcher_background" />
+        android:contentDescription="@string/content_description_movie_poster" />
 
     <TextView
         android:id="@+id/movieTitle"
